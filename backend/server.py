@@ -38,6 +38,7 @@ def execute_script():
             [python_exe, SCRIPT_PATH],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            cwd=os.path.dirname(__file__),
             creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
         )
         

