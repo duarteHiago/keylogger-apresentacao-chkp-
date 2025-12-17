@@ -2,10 +2,12 @@
 .claude/settings.local.json
 
 # Logs capturados
-backend/client_keys.txt
-backend/captured_keys.txt
-backend/sessoes.txt
+captured_keys.txt
+**/captured_keys.txt
+**/client_keys.txt
+**/sessoes.txt
 backend/logs_vitimas/
+**/logs_vitimas/
 
 # Python
 __pycache__/
