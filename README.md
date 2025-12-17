@@ -1,179 +1,327 @@
-# Sistema de Demonstração: Cadastro + Download + Execução Controlada
+# 🔐 Keylogger Browser-Based - Demonstração Educacional
 
-Este projeto demonstra, em ambiente local e com consentimento, como uma página web pode:
-- Exibir um formulário de cadastro estático (sem backend ativo por padrão)
-- Oferecer uma página de download com um botão que dispara ações no cliente e no servidor
-- Chamar um servidor local (Flask) que executa um script Python em background
+<div align="center">
 
-⚠️ Importante: Este repositório é para fins educacionais/demonstração. O script `keylogger.py` captura teclas localmente. Use APENAS em ambiente controlado, com consentimento explícito, em conformidade com leis e políticas (LGPD). Não utilize para fins maliciosos.
+[![License:  MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://www.javascript.com/)
 
----
+**Sistema de demonstração de técnicas de phishing e keylogger client-side para fins educacionais**
 
-## Estrutura do projeto
+[Sobre](#-sobre-o-projeto) •
+[Templates](#-templates-de-phishing) •
+[Instalação](#-instalação-rápida) •
+[Segurança](#️-segurança) •
+[Docs](#-documentação-técnica)
 
-```
-frontend/
-  cadastro/
-    index.html
-    styles.css
-    script.js
-  download/
-    download.html
-    download-styles.css
-    download-script.js
-    examples/
-      payload.js  (não utilizado; exemplo educacional)
-
-backend/
-  server.py
-  keylogger.py
-  requirements.txt
-
-captured_keys.txt  (gerado quando o keylogger roda, dentro de backend/)
-```
-
-Fluxo (alto nível):
-```
-Usuário → frontend/download/download.html → (botão) → download-script.js → POST /api/execute → backend/server.py → executa backend/keylogger.py
-                                                                                   ↓
-                                                                  backend/captured_keys.txt (log)
-```
+</div>
 
 ---
 
-## Requisitos
+## ⚠️ AVISO IMPORTANTE
 
-- Windows (PowerShell)
-- Python 3.11 ou 3.12 recomendado (3.13 pode requerer ajustes de pacotes)
-
-Pacotes (instalados via `backend/requirements.txt`): Flask, Flask-CORS, pynput
+> **Este projeto é exclusivamente educacional.** O uso inadequado pode violar a LGPD e o Código Penal Brasileiro. 
+> 
+> **Use APENAS com consentimento explícito e em ambiente isolado (localhost).**
 
 ---
 
-## Instalação
+## 📋 Sobre o Projeto
 
-Recomendado usar ambiente virtual.
+Sistema de demonstração de **keylogger JavaScript** que captura interações em páginas web falsas (phishing) e envia automaticamente para um servidor backend.
 
-```powershell
-# na raiz do projeto
+### O que você vai aprender:
+
+- ✅ Como keyloggers client-side capturam dados no navegador
+- ✅ Técnicas de phishing com templates pixel-perfect
+- ✅ Fluxo de captura e exfiltração de credenciais
+- ✅ Como se defender contra estes ataques
+
+---
+
+## 🏗️ Arquitetura
+
+```
+┌─────────────────────────────────────────┐
+│  FRONTEND (JavaScript)                   │
+│  • Templates:  Microsoft/Google/Spotify   │
+│  • keylogger-client.js                   │
+│    → Captura teclas/cliques              │
+│    → Buffer inteligente (10/5s)          │
+│    → Envio automático via fetch()        │
+└──────────────┬──────────────────────────┘
+               │
+               │ POST /api/salvar-client
+               │
+┌──────────────▼──────────────────────────┐
+│  BACKEND (Flask/Python)                  │
+│  • Recebe dados capturados               │
+│  • Valida e salva em JSON                │
+└──────────────────────────────────────────┘
+```
+
+---
+
+## 🎭 Templates de Phishing
+
+O projeto inclui **3 templates pixel-perfect** de páginas de login reais.
+
+| Template | Fidelidade | Características |
+|----------|-----------|-----------------|
+| **Microsoft** | 98% | 3 etapas, design oficial, animações |
+| **Google** | 95% | 2 etapas, validação visual |
+| **Spotify** | 97% | Dark mode, botões sociais |
+
+---
+
+## 🚀 Instalação Rápida
+
+### 1. Clone e Configure
+
+```bash
+git clone https://github.com/duarteHiago/keylogger-apresentacao-chkp-.git
+cd keylogger-apresentacao-chkp-
+
+# Crie ambiente virtual
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
+.\.venv\Scripts\Activate.ps1  # Windows
+# source .venv/bin/activate    # Linux/Mac
 
-# instalar dependências do backend
-cd .\backend
-python -m pip install -r requirements.txt
-cd ..
+# Instale dependências
+cd backend
+pip install -r requirements.txt
 ```
 
----
+### 2. Inicie o Servidor
 
-## Execução
-
-1) Inicie o servidor Flask (na pasta backend)
 ```powershell
-cd .\backend
+cd backend
 python server.py
 ```
-Saída esperada (resumo):
-```
-🚀 Servidor iniciado em http://localhost:5000
-📌 Endpoints: /api/execute, /api/stop, /api/status, /api/log
-```
 
-2) Abra a página de download e clique no botão (na pasta frontend)
+✅ **Servidor rodando em:** `http://localhost:5000`
+
+### 3. Abra um Template
+
 ```powershell
-cd ..\frontend\download
-start .\download.html
-```
-- A página chamará `POST http://localhost:5000/api/execute`
-- O servidor executa `backend/keylogger.py` em background
-- A página exibirá “Keylogger iniciado! PID: ...” e fará download de um relatório simples
+# Microsoft
+cd ..\frontend\cadastro\templates\microsoft
+start index.html
 
-3) Visualize o log de capturas em tempo real (na pasta backend)
+# OU Google
+cd ..\frontend\cadastro\templates\google
+start index.html
+
+# OU Spotify
+cd ..\frontend\cadastro\templates\spotify
+start index.html
+```
+
+### 4. Teste e Observe
+
+1. Digite credenciais fictícias na página
+2. Pressione `F12` (DevTools) → aba **Console**
+3. Veja os logs do keylogger em ação
+4. Verifique `backend/client_logs.json` para ver dados capturados
+
+---
+
+## 📊 Como Funciona
+
+```
+Usuário digita → keylogger captura → buffer acumula → 
+→ (10 eventos OU 5s) → POST para backend → salva em JSON
+```
+
+### Dados Capturados
+
+```json
+{
+  "tipo": "keypress",
+  "tecla": "a",
+  "campo": "email",
+  "timestamp": "2025-12-17T10:30:00.123Z",
+  "url": "http://localhost/google/index.html",
+  "sessionId": "session_1734480001_abc123"
+}
+```
+
+---
+
+## 🛡️ Segurança
+
+### Cenário de Ataque Real
+
+<div align="center">
+
+```
+1. Atacante registra domínio similar
+   ❌ googIe.com (I maiúsculo)
+   
+2. Hospeda template idêntico + keylogger
+   
+3. Envia email de phishing em massa
+   📧 "Sua conta será suspensa!"
+   
+4. Vítima digita credenciais reais
+   
+5. Keylogger captura TUDO em tempo real
+   
+6. Dados enviados ao servidor do atacante
+   💀 Email + Senha comprometidos
+```
+
+</div>
+
+### Como Se Proteger
+
+#### Para Usuários:
+
+| ✅ FAÇA | ❌ NÃO FAÇA |
+|---------|-------------|
+| Verifique sempre a URL (HTTPS + domínio correto) | Confie apenas no visual da página |
+| Use gerenciador de senhas | Digite senhas manualmente em sites suspeitos |
+| Habilite 2FA | Clique em links de emails urgentes |
+
+#### Para Organizações:
+
+- ✅ **EDR/XDR**: Harmony Endpoint, CrowdStrike, SentinelOne
+- ✅ **URL Filtering**: Bloqueia domínios maliciosos
+- ✅ **Zero Phishing**: Detecção de phishing zero-day
+- ✅ **Treinamento**: Simulações periódicas
+
+---
+
+## 📂 Estrutura
+
+```
+keylogger-apresentacao-chkp-/
+│
+├── frontend/cadastro/
+│   ├── keylogger-client.js      # ⚡ Keylogger JavaScript
+│   └── templates/
+│       ├── microsoft/           # ✅ Template Microsoft
+│       ├── google/              # ✅ Template Google
+│       └── spotify/             # ✅ Template Spotify
+│
+└── backend/
+    ├── server.py                # 🖥️ API Flask
+    ├── requirements.txt         # Dependências
+    └── client_logs.json         # 📝 Logs (gerado)
+```
+
+---
+
+## 🔌 API
+
+```http
+POST /api/salvar-client
+Content-Type: application/json
+
+{
+  "sessao": "session_xxx",
+  "dados": [ /* eventos capturados */ ],
+  "navegador": "Mozilla/5.0...",
+  "plataforma": "Win32",
+  "idioma": "pt-BR"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "eventos_recebidos": 10,
+  "message": "Dados salvos com sucesso"
+}
+```
+
+---
+
+## ⚖️ Aspectos Legais
+
+### 🇧🇷 LGPD + Código Penal
+
+**Uso sem consentimento é:**
+- ⚖️ **ILEGAL** (LGPD Art. 52)
+- ⚖️ **CRIME** (Código Penal Art. 154-A)
+- 💰 Multa até **R$ 50 milhões**
+- 🚔 Prisão de **3 meses a 1 ano**
+
+### ✅ Uso Educacional Legítimo
+
+```
+✅ Consentimento documentado (TCLE)
+✅ Ambiente isolado (localhost)
+✅ Dados fictícios/anonimizados
+✅ Exclusão após demonstração
+✅ Supervisão acadêmica/institucional
+```
+
+---
+
+## 🎓 Propósito
+
+Este projeto é para:
+- 🎯 Demonstração em laboratórios de segurança
+- 🔍 Treinamento de awareness em empresas
+- 📖 Material didático para cibersegurança
+- 🛡️ Capacitação de Blue Team e Red Team
+
+---
+
+## 📚 Documentação Técnica
+
+Detalhes aprofundados sobre arquitetura, fluxos, estruturas de dados e extensões:
+
+📖 **[DOCUMENTATION.md](./DOCUMENTATION.md)**
+
+---
+
+## 🛠️ Solução de Problemas
+
 ```powershell
-cd ..\..\backend
-Get-Content .\captured_keys.txt -Wait
+# Erro: "No module named 'flask'"
+cd backend
+pip install -r requirements.txt
+
+# Erro: "Porta 5000 em uso"
+netstat -ano | findstr :5000
+taskkill /PID <numero> /F
+
+# Keylogger não envia dados
+# → Verifique se servidor Flask está rodando
+# → Abra DevTools (F12) e procure erros no Console
 ```
 
-4) Parar o keylogger
-- Pressione ESC no teclado (o script trata essa tecla e finaliza)
-- Ou via API (outro terminal):
-```powershell
-curl -X POST http://localhost:5000/api/stop
-```
+---
+
+## 📄 Licença
+
+MIT License - Veja [LICENSE](LICENSE) para detalhes.
 
 ---
 
-## Endpoints do servidor (backend/server.py)
+## ⚠️ Disclaimer
 
-- `POST /api/execute`
-  - Inicia `keylogger.py` em background
-  - Resposta: `{ success, pid, script, message }`
-- `POST /api/stop`
-  - Para o processo em execução
-  - Resposta: `{ success, message }`
-- `GET /api/status`
-  - Verifica se está rodando e retorna o PID
-  - Resposta: `{ running, pid, script }`
-- `GET /api/log`
-  - Retorna o conteúdo atual do arquivo de log
-  - Resposta: `{ success, content, size }`
+**IMPORTANTE:** Este software é fornecido "como está", sem garantias.
+
+O uso para capturar dados **sem consentimento explícito** é **ILEGAL** e pode resultar em:
+- Processos criminais (Art. 154-A)
+- Multas da LGPD (até R$ 50 milhões)
+- Responsabilização civil
+
+**Os autores NÃO se responsabilizam por uso inadequado.**
+
+**Use responsavelmente. Sempre obtenha consentimento explícito.**
 
 ---
 
-## Páginas front-end
+<div align="center">
 
-- `frontend/cadastro/index.html` — formulário de cadastro (estático)
-- `frontend/download/download.html` — página com o botão de download/execução
-  - `download-script.js` (cliente):
-    - Coleta informações básicas (timestamp, userAgent, plataforma, idioma, resolução)
-    - Chama o backend para iniciar o script
-    - Exibe status e baixa um relatório com informações básicas + PID do processo
+**Desenvolvido para fins educacionais** 🎓 | **Segurança da Informação** 🔐
 
----
+[![GitHub](https://img.shields.io/badge/GitHub-duarteHiago-blue?logo=github)](https://github.com/duarteHiago/keylogger-apresentacao-chkp-)
 
-## Segurança e responsabilidade
-
-- Uso exclusivamente educacional, com consentimento explícito e em ambiente controlado.
-- Não publique estes artefatos em produção.
-- Garanta transparência e compliance com a LGPD.
-- Não colete/transmita dados sensíveis sem base legal e proteção adequada.
-
----
-
-## Personalizações
-
-- Alterar porta do servidor: edite `app.run(..., port=5000)` no `backend/server.py`.
-- Ajustar estilos/branding: edite os CSS em `frontend/`.
-- Simplificar relatório: edite a montagem do texto em `frontend/download/download-script.js`.
-- Integrar com o formulário: `frontend/cadastro/index.html` pode redirecionar para `../download/download.html?from=cadastro`.
-
----
-
-## Solução de problemas
-
-- "No module named 'flask'" / "flask_cors":
-```powershell
-cd .\backend
-python -m pip install -r requirements.txt
-```
-
-- Porta 5000 ocupada:
-  - Feche o processo na porta ou altere a porta no `backend/server.py`.
-
-- CORS/bloqueio de requisição:
-  - O `Flask-CORS` está habilitado. Confirme que acessa `http://localhost:5000`.
-
-- `pynput` em Python 3.13:
-  - Se houver erro, prefira Python 3.12/3.11 em um `venv`.
-
-- Log não aparece:
-  - Verifique se o servidor iniciou o `keylogger.py` (veja PID no relatório)
-  - Confira `backend/captured_keys.txt`
-
----
-
-## Aviso final
-
-Este projeto existe para conscientização e demonstração controlada. Utilize com responsabilidade, transparência e consentimento, respeitando as leis e políticas vigentes.
+</div>
