@@ -1,7 +1,6 @@
 # 🔐 Keylogger Educacional - Demonstração Check Point
 
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-educational-orange)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgrey)
 
@@ -361,10 +360,6 @@ pip install --upgrade -r requirements.txt
 1. **Check Point Certified Security Administrator (CCSA)**
 2. **Ethical Hacking Courses**
 3. **Security Awareness Training**
-
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 
 ## 👨‍💻 Autor
 
