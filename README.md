@@ -1,7 +1,6 @@
 # 🔐 Keylogger Educacional - Demonstração Check Point
 
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-educational-orange)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgrey)
 
@@ -362,50 +361,10 @@ pip install --upgrade -r requirements.txt
 2. **Ethical Hacking Courses**
 3. **Security Awareness Training**
 
-## 🤝 Contribuindo
-
-Este é um projeto educacional. Contribuições são bem-vindas desde que mantenham o foco educacional:
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
-
 ## 👨‍💻 Autor
 
 **Duarte Hiago**
 - GitHub: [@duarteHiago](https://github.com/duarteHiago)
 - Projeto: Apresentação Check Point - Segurança Cibernética
-
-## 🙏 Agradecimentos
-
-- Check Point Software Technologies pela inspiração
-- Comunidade de segurança cibernética
-- Todos que contribuem para a educação em segurança
-
-## ⚠️ Disclaimer Final
-
-**ESTE SOFTWARE É FORNECIDO "COMO ESTÁ", SEM GARANTIAS DE QUALQUER TIPO, EXPRESSAS OU IMPLÍCITAS.**
-
-O desenvolvedor não se responsabiliza por:
-- Qualquer uso indevido deste software
-- Danos diretos ou indiretos causados pelo uso
-- Violações de leis locais, estaduais ou federais
-- Perda de dados ou violação de privacidade
-
-**USE POR SUA PRÓPRIA CONTA E RISCO E APENAS PARA FINS EDUCACIONAIS LEGÍTIMOS.**
-
----
-
-<div align="center">
-
-**🔒 Desenvolvido para Educação em Segurança Cibernética 🔒**
-
-*"A melhor defesa é o conhecimento"*
 
 </div>
